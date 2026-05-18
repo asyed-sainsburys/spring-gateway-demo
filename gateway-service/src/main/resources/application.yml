@@ -8,7 +8,7 @@ spring:
   cloud:
     gateway:
       server:
-        webflux:
+        webmvc:
           routes:
             - id: user
               uri: http://localhost:8081

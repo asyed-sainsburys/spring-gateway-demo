@@ -29,6 +29,9 @@ mvn -pl gateway-service spring-boot:run
 curl http://localhost:8080/user/api/users
 curl http://localhost:8080/report/api/reports/summary
 ```
+```bash
+curl http://localhost:8081/api/users
+```
 
 ## Actuator health
 
