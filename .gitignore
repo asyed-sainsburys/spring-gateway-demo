@@ -1,0 +1,33 @@
+### Java template
+*.class
+target/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# Intellij
+*.iml
+.idea/
+
+# Eclipse
+.settings/
+.classpath
+.project
+
+# Maven
+.factorypath
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.envrc
+
+# Terraform
+.terraform/
+.terraform.lock.hcl
+
