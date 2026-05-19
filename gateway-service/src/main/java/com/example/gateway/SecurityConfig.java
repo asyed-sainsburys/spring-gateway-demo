@@ -6,6 +6,15 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -13,15 +22,61 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         http
-                .csrf(csrf -> csrf.disable())
+                .cors(Customizer.withDefaults())
+                .csrf(csrf -> csrf
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
+                )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/public/**").permitAll()
+                        // /login/** and /oauth2/** MUST be permitted to avoid the redirect loop:
+                        // the OAuth2 callback (/login/oauth2/code/keycloak) would otherwise
+                        // be intercepted, trigger another redirect to Keycloak, and loop forever.
+                        .requestMatchers(
+                                "/login/**",
+                                "/oauth2/**",
+                                "/public/**",
+                                "/actuator/**",
+                                "/error"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(
+                                new LoginUrlAuthenticationEntryPoint("/oauth2/authorization/keycloak")
+                        )
+                )
+                // oauth2Login: backend handles the full code exchange and issues JSESSIONID cookie.
+                // NOTE: oauth2ResourceServer / JWT is intentionally removed — it conflicts with
+                // session-based auth and causes the redirect loop.
+                .oauth2Login(oauth2 -> oauth2
+                        // Use successHandler for absolute URL redirect (defaultSuccessUrl only works for relative paths)
+                        .successHandler((request, response, authentication) ->
+                                response.sendRedirect("http://localhost:3000")
+                        )
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessHandler((request, response, authentication) ->
+                                response.sendRedirect("http://localhost:3000")
+                        )
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .deleteCookies("JSESSIONID")
+                );
 
         return http.build();
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(List.of("http://localhost:3000"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 }

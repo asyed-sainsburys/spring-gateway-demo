@@ -4,8 +4,21 @@ server:
 spring:
   application:
     name: gateway-service
+
   security:
     oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: gateway-bff
+            client-secret: xJf2tIKRAT8phZfr23fPOnwIPcucpsMg
+            client-authentication-method: client_secret_basic
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope: openid,profile,email
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:9090/realms/local-dev
       resourceserver:
         jwt:
           issuer-uri: http://localhost:9090/realms/local-dev
@@ -21,7 +34,6 @@ spring:
                 - Path=/user/**
               filters:
                 - StripPrefix=1
-
             - id: report
               uri: http://localhost:8082
               predicates:
