@@ -9,19 +9,33 @@ spring:
     oauth2:
       client:
         registration:
+<<<<<<< HEAD
           keycloak:
             client-id: gateway-bff
             client-secret: xJf2tIKRAT8phZfr23fPOnwIPcucpsMg
+=======
+          azure:
+            client-id: ${AZURE_CLIENT_ID}
+            client-secret: ${AZURE_CLIENT_SECRET}
+>>>>>>> 7fe5553 (Move Azure credentials to environment variables)
             client-authentication-method: client_secret_basic
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             scope: openid,profile,email
         provider:
+<<<<<<< HEAD
           keycloak:
             issuer-uri: http://localhost:9090/realms/local-dev
       resourceserver:
         jwt:
           issuer-uri: http://localhost:9090/realms/local-dev
+=======
+          azure:
+            issuer-uri: https://login.microsoftonline.com/${AZURE_TENANT_ID}/v2.0
+      resourceserver:
+        jwt:
+          issuer-uri: https://login.microsoftonline.com/${AZURE_TENANT_ID}/v2.0
+>>>>>>> 7fe5553 (Move Azure credentials to environment variables)
 
   cloud:
     gateway:
