@@ -19,7 +19,7 @@ spring:
               - openid
               - profile
               - email
-              - api://a43434b4-8f3a-4213-86dc-5c9b0a521ed3/access_as_user
+              - api://${MY_SCOPE}/access_as_user
         provider:
           azure:
             issuer-uri: https://login.microsoftonline.com/${MY_AZURE_TENANT_ID}/v2.0
@@ -45,6 +45,7 @@ spring:
                 - Path=/report/**
               filters:
                 - StripPrefix=1
+                - TokenRelay=
 
 management:
   endpoints:

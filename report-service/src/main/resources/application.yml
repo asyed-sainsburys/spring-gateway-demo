@@ -4,6 +4,20 @@ server:
 spring:
   application:
     name: report-service
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://sts.windows.net/${MY_AZURE_TENANT_ID}/
+
+app:
+  oauth2:
+    token-uri: https://login.microsoftonline.com/${MY_AZURE_TENANT_ID}/oauth2/v2.0/token
+    client-id: ${MY_SERVICE_CLIENT_ID}
+    client-secret: ${MY_SERVICE_CLIENT_SECRET}
+    scope: api://${MY_SCOPE}/.default
+  user-service:
+    users-uri: ${USER_SERVICE_USERS_URI:http://localhost:8081/api/users}
 
 management:
   endpoints:
@@ -13,3 +27,8 @@ management:
   endpoint:
     health:
       show-details: always
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.web.servlet.function: DEBUG

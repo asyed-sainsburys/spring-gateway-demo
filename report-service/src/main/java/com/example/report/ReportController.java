@@ -1,6 +1,7 @@
 package com.example.report;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -16,8 +17,10 @@ public class ReportController {
   }
 
   @GetMapping("/api/reports/summary")
-  public Map<String, Object> summary() {
-    List<Map<String, Object>> users = userClient.getUsers();
+  public Map<String, Object> summary(
+      @RequestHeader(value = "Authorization", required = false) String authorizationHeader
+  ) {
+    List<Map<String, Object>> users = userClient.getUsers(authorizationHeader);
     long admins = users.stream().filter(u -> "ADMIN".equals(u.get("role"))).count();
     long regular = users.size() - admins;
 

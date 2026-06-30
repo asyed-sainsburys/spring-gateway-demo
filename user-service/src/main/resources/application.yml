@@ -8,7 +8,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: https://sts.windows.net/8b8872c9-1d5f-45f4-96a9-46567cdac345/
+          issuer-uri: https://sts.windows.net/${MY_AZURE_TENANT_ID}/
 
 management:
   endpoints:

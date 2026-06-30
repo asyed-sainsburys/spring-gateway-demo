@@ -21,3 +21,6 @@ npm start
 
 - `REACT_APP_API_BASE_URL` defaults to `http://localhost:8080`
 
+
+
+curl -X POST https://login.microsoftonline.com/$MY_AZURE_TENANT_ID/oauth2/v2.0/token  -H "Content-Type: application/x-www-form-urlencoded" -d "client_id=$MY_SERVICE_CLIENT_ID"  -d "client_secret=$MY_SERVICE_CLIENT_SECRET" -d "grant_type=client_credentials" -d "scope=api://a43434b4-8f3a-4213-86dc-5c9b0a521ed3/.default"
