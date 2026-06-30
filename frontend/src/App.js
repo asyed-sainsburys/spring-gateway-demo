@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
 const USERS_ENDPOINT = `${API_BASE_URL}/user/api/users`;
-const LOGIN_ENDPOINT = `${API_BASE_URL}/oauth2/authorization/keycloak`;
+const LOGIN_ENDPOINT = `${API_BASE_URL}/oauth2/authorization/azure`;
 const LOGOUT_ENDPOINT = `${API_BASE_URL}/logout`;
 
 function App() {

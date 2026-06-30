@@ -30,8 +30,8 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         // /login/** and /oauth2/** MUST be permitted to avoid the redirect loop:
-                        // the OAuth2 callback (/login/oauth2/code/keycloak) would otherwise
-                        // be intercepted, trigger another redirect to Keycloak, and loop forever.
+                        // the OAuth2 callback (/login/oauth2/code/azure) would otherwise
+                        // be intercepted, trigger another redirect to Azure AD, and loop forever.
                         .requestMatchers(
                                 "/login/**",
                                 "/oauth2/**",
@@ -43,7 +43,7 @@ public class SecurityConfig {
                 )
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(
-                                new LoginUrlAuthenticationEntryPoint("/oauth2/authorization/keycloak")
+                                new LoginUrlAuthenticationEntryPoint("/oauth2/authorization/azure")
                         )
                 )
                 // oauth2Login: backend handles the full code exchange and issues JSESSIONID cookie.

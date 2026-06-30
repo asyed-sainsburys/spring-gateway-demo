@@ -70,3 +70,6 @@ licence
 company would geneate a jwt and then sent it to users
 user would validate it and proceed if fine
 
+
+
+http://localhost:8080/user/api/users
