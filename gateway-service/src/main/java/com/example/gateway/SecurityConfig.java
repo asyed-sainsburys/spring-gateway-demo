@@ -50,7 +50,20 @@ public class SecurityConfig {
                 // NOTE: oauth2ResourceServer / JWT is intentionally removed — it conflicts with
                 // session-based auth and causes the redirect loop.
                 .oauth2Login(oauth2 -> oauth2
-                        // Use successHandler for absolute URL redirect (defaultSuccessUrl only works for relative paths)
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .oidcUserService(new org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService() {
+                                    @Override
+                                    public org.springframework.security.oauth2.core.oidc.user.OidcUser loadUser(
+                                            org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest userRequest) {
+                                        return new org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser(
+                                                userRequest.getAccessToken().getScopes().stream()
+                                                        .map(scope -> new org.springframework.security.core.authority.SimpleGrantedAuthority("SCOPE_" + scope))
+                                                        .toList(),
+                                                userRequest.getIdToken()
+                                        );
+                                    }
+                                })
+                        )
                         .successHandler((request, response, authentication) ->
                                 response.sendRedirect("http://localhost:3000")
                         )

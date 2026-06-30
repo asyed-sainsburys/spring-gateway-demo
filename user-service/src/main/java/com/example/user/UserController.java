@@ -17,7 +17,8 @@ public class UserController {
   );
 
   @GetMapping("/api/users")
-  public List<Map<String, Object>> users() {
+  public List<Map<String, Object>> users(org.springframework.security.core.Authentication authentication) {
+    System.out.println(authentication);
     return USERS;
   }
 

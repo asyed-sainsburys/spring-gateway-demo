@@ -15,7 +15,11 @@ spring:
             client-authentication-method: client_secret_basic
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-            scope: openid,profile,email
+            scope:
+              - openid
+              - profile
+              - email
+              - api://a43434b4-8f3a-4213-86dc-5c9b0a521ed3/access_as_user
         provider:
           azure:
             issuer-uri: https://login.microsoftonline.com/${MY_AZURE_TENANT_ID}/v2.0
@@ -34,6 +38,7 @@ spring:
                 - Path=/user/**
               filters:
                 - StripPrefix=1
+                - TokenRelay=
             - id: report
               uri: http://localhost:8082
               predicates:
@@ -53,3 +58,4 @@ logging:
   level:
     org.springframework.security: DEBUG
     org.springframework.cloud.gateway: DEBUG
+    org.springframework.web.servlet.function: DEBUG

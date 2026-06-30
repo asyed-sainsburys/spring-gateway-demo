@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: user-service
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://sts.windows.net/8b8872c9-1d5f-45f4-96a9-46567cdac345/
 
 management:
   endpoints:
@@ -13,3 +18,8 @@ management:
   endpoint:
     health:
       show-details: always
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.web.servlet.function: DEBUG
